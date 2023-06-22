@@ -1,2 +1,0 @@
-;Date;Averaging [min];Direction;Data type;Distance [AU];STEP;EPT;HET;Sigma;Relative error;Fraction of nan;Leave first HET channel out;Shift STEP data;Type of fit;Fit to;Which fit;Min energy;Max energy;Gamma1 guess;Gamma2 guess;c1 guess;Alpha guess;Break guess [MeV];Cutoff point guess [MeV];Use random;Iterations
-0;2022-04-15;1min;sun;l2;0.5;False;True;True;3;0.5;0.9;True;;ept_het;peak;best;;;-1.9;-2.5;1000;10;0.6;1.2;True;20
