@@ -281,7 +281,7 @@ def posintion_and_traveltime(date):
 def extract_proton_data(df_protons, df_energies, plotstart, plotend,  t_inj, bgstart = None, bgend = None,
                           bg_distance_from_window = 120, bg_period = 60, travel_distance = 0,  travel_distance_second_slope = None,
                           fixed_window = None, instrument = 'ept', data_type = 'l2', averaging_mode='none',
-                          averaging=2, masking=True, ion_conta_corr=False):
+                          averaging=2, masking=False, ion_conta_corr=False):
     """This function determines an energy spectrum from time series data for any of the Solar Orbiter / EPD 
     sensors uses energy-dependent time windows to determine the flux points for the spectrum. 
     The dependence is determined according to an expected velocity dispersion assuming a certain 
@@ -417,7 +417,6 @@ def extract_proton_data(df_protons, df_energies, plotstart, plotend,  t_inj, bgs
                 df_proton_fluxes = df_proton_fluxes.rename(columns={'H_Flux_{}'.format(i):'Ion_Flux_{}'.format(i)})
                 df_proton_uncertainties = df_proton_uncertainties.rename(columns={'H_Uncertainty_{}'.format(i):'Ion_Uncertainty_{}'.format(i)})
 
-    # STEP a wip.
     elif(instrument == 'step'):
         if(data_type == 'l2'):
             e_low = df_energies['Bins_Low_Energy']
@@ -434,8 +433,6 @@ def extract_proton_data(df_protons, df_energies, plotstart, plotend,  t_inj, bgs
 #            if 'Ion_Avg_Flux_0' in df_protons.columns:
             df_proton_fluxes = pd.DataFrame()
             df_proton_uncertainties = pd.DataFrame()
-
-            print("df_protons:\n", df_protons)
 
             for i in channels:
                 e_high.append(e_low[i]+df_energies['Bins_Width'][i])
@@ -589,7 +586,6 @@ def extract_proton_data(df_protons, df_energies, plotstart, plotend,  t_inj, bgs
     for energy in primary_energies:
         velocity.append(evolt2speed(energy, 1))
 
-    print("velocities:\n", velocity)
 
 
     # Using calculated velocity to find the right search period
@@ -644,9 +640,11 @@ def extract_proton_data(df_protons, df_energies, plotstart, plotend,  t_inj, bgs
             bgstart.append(searchstart[i]-pd.Timedelta(minutes = bg_distance_from_window))
             bgend.append(bgstart[i]+pd.Timedelta(minutes = bg_period))
 
-    for i in range(len(searchstart)):
-        searchstart[i] = datetime(2021, 5, 7, 18, 0)
-        searchend[i] = datetime(2021, 5, 7, 22, 0)
+    # This is for testing the search window
+#    for i in range(len(searchstart)):
+#        searchstart[i] = datetime(2021, 5, 7, 18, 0)
+#        searchend[i] = datetime(2021, 5, 7, 22, 0)
+
 
     # Next blocks of code calculate information from data and append them to main info df.
     list_bg_fluxes = []
@@ -687,7 +685,7 @@ def extract_proton_data(df_protons, df_energies, plotstart, plotend,  t_inj, bgs
         if len(f_p) != 0:
             flux_peak = df_proton_fluxes['Ion_Flux_{}'.format(channel)][searchstart[n]:searchend[n]].max()
         list_flux_peaks.append(flux_peak)
-        
+
 
         # check if a large enough fraction of data points are not nan. If there are too many nan's in the search time interval, frac_nonan can be used to exclude the channel from the spectrum
         frac_nonan = 1 - np.sum(np.isnan(f_p)) / len(f_p) # fraction of data in interval that is NOT nan
