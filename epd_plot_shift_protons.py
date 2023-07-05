@@ -265,14 +265,14 @@ def posintion_and_traveltime(date):
     pos = get_horizons_coord('Solar Orbiter', date, 'id')
     dist = np.round(pos.radius.value, 2)
     spiral_len = len_of_spiral(400,dist)
-    traveltime_min = traveltime_los(spiral_len, 0.004, 2, dist)
-    traveltime_max = traveltime_los(spiral_len, 10, 2, dist)
+    traveltime_min = traveltime_los(spiral_len, 0.004, 1, dist)
+    traveltime_max = traveltime_los(spiral_len, 100, 1, dist)
     light_t = light_tt(dist)
 
     table_data = [["Distance of SolO from the Sun", "[AU]", dist],
                   ["Length of the Parker Spiral for 400 km/s sw ", "[AU]", spiral_len],
-                  ["Travel time of 4 KeV electrons ", "[min]", traveltime_min],
-                  ["Travel time of 10 MeV electrons ", "[min]", traveltime_max],
+                  ["Travel time of 4 keV protons ", "[min]", traveltime_min],
+                  ["Travel time of 100 MeV protons ", "[min]", traveltime_max],
                   ["Travel time of light ", "[min]", light_t]]
     
     print(tabulate(table_data))
@@ -641,9 +641,9 @@ def extract_proton_data(df_protons, df_energies, plotstart, plotend,  t_inj, bgs
             bgend.append(bgstart[i]+pd.Timedelta(minutes = bg_period))
 
     # This is for testing the search window
-#    for i in range(len(searchstart)):
-#        searchstart[i] = datetime(2021, 5, 7, 18, 0)
-#        searchend[i] = datetime(2021, 5, 7, 22, 0)
+   # for i in range(len(searchstart)):
+   #     searchstart[i] = datetime(2021, 5, 7, 18, 0)
+   #     searchend[i] = datetime(2021, 5, 7, 22, 0)
 
 
     # Next blocks of code calculate information from data and append them to main info df.
